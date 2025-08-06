@@ -2,150 +2,39 @@
 <html lang="az">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kesr Testləri</title>
   <style>
     body {
-      margin: 0;
-      background: #0f172a;
+      background-color: #121820;
       color: #fff;
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
     }
     h1 {
-      color: #4ade80;
+      color: #00e676;
     }
     .question-box {
-      background: #1e293b;
+      background: #1e272e;
       padding: 20px;
-      border-radius: 15px;
-      max-width: 400px;
+      border-radius: 10px;
       width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
       text-align: center;
-      box-shadow: 0 0 10px #000;
     }
     .fraction {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    input {
-      padding: 10px;
-      margin: 5px;
-      font-size: 18px;
-      width: 120px;
+      display: inline-block;
       text-align: center;
-      border-radius: 8px;
-      border: none;
+      font-size: 20px;
     }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #22c55e;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 15px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <h1>Kesr Testləri</h1>
-  <div class="question-box">
-    <div id="questionText" class="fraction"></div>
-    <input type="number" id="answerNum" placeholder="Surəti yaz">
-    <input type="number" id="answerDen" placeholder="Məxrəci yaz">
-    <br>
-    <button onclick="checkAnswer()">Cavabla</button>
-    <div id="result"></div>
-  </div>
-
-  <script>
-    let correctAnswer = { num: 0, den: 0 };
-    let questionCount = 0;
-    let level = 1;
-    const usedQuestions = new Set();
-
-    function gcd(a, b) {
-      return b === 0 ? a : gcd(b, a % b);
-    }
-
-    function generateFraction(level) {
-      const max = 5 + level * 3;
-      let a = Math.floor(Math.random() * max) + 1;
-      let b = Math.floor(Math.random() * max) + 1;
-      const div = gcd(a, b);
-      return { num: a, den: b, simpNum: a / div, simpDen: b / div };
-    }
-
-    function generateQuestion() {
-      let f1 = generateFraction(level);
-      let f2 = generateFraction(level);
-      let type = ["topla", "çıx", "vurma", "bölmə"][Math.floor(Math.random() * 4)];
-      let key = `${f1.num}/${f1.den}-${type}-${f2.num}/${f2.den}`;
-      if (usedQuestions.has(key)) return generateQuestion();
-      usedQuestions.add(key);
-
-      let resultNum, resultDen, question;
-
-      switch (type) {
-        case "topla":
-          resultNum = f1.num * f2.den + f2.num * f1.den;
-          resultDen = f1.den * f2.den;
-          question = `${f1.num}/${f1.den} + ${f2.num}/${f2.den}`;
-          break;
-        case "çıx":
-          resultNum = f1.num * f2.den - f2.num * f1.den;
-          resultDen = f1.den * f2.den;
-          if (resultNum < 0) return generateQuestion();
-          question = `${f1.num}/${f1.den} - ${f2.num}/${f2.den}`;
-          break;
-        case "vurma":
-          resultNum = f1.num * f2.num;
-          resultDen = f1.den * f2.den;
-          question = `${f1.num}/${f1.den} × ${f2.num}/${f2.den}`;
-          break;
-        case "bölmə":
-          resultNum = f1.num * f2.den;
-          resultDen = f1.den * f2.num;
-          if (resultDen === 0 || resultNum < 0) return generateQuestion();
-          question = `${f1.num}/${f1.den} ÷ ${f2.num}/${f2.den}`;
-          break;
-      }
-
-      const div = gcd(resultNum, resultDen);
-      correctAnswer = { num: resultNum / div, den: resultDen / div };
-
-      document.getElementById("questionText").innerText = `${question} = ?`;
-      document.getElementById("result").innerText = "";
-      document.getElementById("answerNum").value = "";
-      document.getElementById("answerDen").value = "";
-    }
-
-    function checkAnswer() {
-      const userNum = parseInt(document.getElementById("answerNum").value);
-      const userDen = parseInt(document.getElementById("answerDen").value);
-      if (userNum === correctAnswer.num && userDen === correctAnswer.den) {
-        document.getElementById("result").innerText = "✅ Doğrudur!";
-        questionCount++;
-        if (questionCount % 2 === 0) level++; // hər 2 suala bir çətinlik artsın
-        setTimeout(generateQuestion, 1000);
-      } else {
-        document.getElementById("result").innerText = "❌ Səhv. Yenidən cəhd et!";
-      }
-    }
-
-    generateQuestion();
-  </script>
-</body>
-</html>      padding: 0 4px;
+    .fraction .top {
+      border-bottom: 2px solid #fff;
+      display: block;
+      padding: 0 4px;
     }
     .fraction .bottom {
       display: block;
@@ -276,93 +165,6 @@
 
       questionCount++;
       if (questionCount % 2 === 0) level++;
-      setTimeout(generateQuestion, 1500);
-    }
-
-    generateQuestion();
-  </script>
-
-</body>
-</html>    let correctAnswer = { num: 0, den: 0 };
-    let questionCount = 0;
-    let level = 1;
-
-    function gcd(a, b) {
-      return b === 0 ? a : gcd(b, a % b);
-    }
-
-    function generateFraction(level) {
-      const max = 5 + level * 3;
-      let a = Math.floor(Math.random() * max) + 1;
-      let b = Math.floor(Math.random() * max) + 1;
-      const div = gcd(a, b);
-      return { num: a, den: b, simpNum: a / div, simpDen: b / div };
-    }
-
-    function generateQuestion() {
-      let f1 = generateFraction(level);
-      let f2 = generateFraction(level);
-      let type = ["topla", "çıx", "vurma", "bölmə"][Math.floor(Math.random() * 4)];
-
-      // Unikal sual üçün açar
-      let key = `${f1.num}/${f1.den}-${type}-${f2.num}/${f2.den}`;
-      if (usedQuestions.has(key)) return generateQuestion();
-      usedQuestions.add(key);
-
-      let resultNum, resultDen, question;
-
-      switch (type) {
-        case "topla":
-          resultNum = f1.num * f2.den + f2.num * f1.den;
-          resultDen = f1.den * f2.den;
-          question = `${f1.num}/${f1.den} + ${f2.num}/${f2.den}`;
-          break;
-        case "çıx":
-          resultNum = f1.num * f2.den - f2.num * f1.den;
-          resultDen = f1.den * f2.den;
-          question = `${f1.num}/${f1.den} - ${f2.num}/${f2.den}`;
-          break;
-        case "vurma":
-          resultNum = f1.num * f2.num;
-          resultDen = f1.den * f2.den;
-          question = `${f1.num}/${f1.den} × ${f2.num}/${f2.den}`;
-          break;
-        case "bölmə":
-          resultNum = f1.num * f2.den;
-          resultDen = f1.den * f2.num;
-          question = `${f1.num}/${f1.den} ÷ ${f2.num}/${f2.den}`;
-          break;
-      }
-
-      const div = gcd(resultNum, resultDen);
-      correctAnswer = { num: resultNum / div, den: resultDen / div };
-
-      document.getElementById("questionText").innerText = `Sual ${questionCount + 1}: ${question} = ?`;
-      document.getElementById("resultText").innerText = "";
-      document.getElementById("answerNum").value = "";
-      document.getElementById("answerDen").value = "";
-    }
-
-    function checkAnswer() {
-      const userNum = parseInt(document.getElementById("answerNum").value);
-      const userDen = parseInt(document.getElementById("answerDen").value);
-      if (isNaN(userNum) || isNaN(userDen)) {
-        alert("Zəhmət olmasa sədəd və məxrəc daxil et!");
-        return;
-      }
-
-      const div = gcd(userNum, userDen);
-      const simpNum = userNum / div;
-      const simpDen = userDen / div;
-
-      if (simpNum === correctAnswer.num && simpDen === correctAnswer.den) {
-        document.getElementById("resultText").innerHTML = "✅ Doğrudur!";
-      } else {
-        document.getElementById("resultText").innerHTML = `❌ Səhv! Düzgün cavab: ${correctAnswer.num}/${correctAnswer.den}`;
-      }
-
-      questionCount++;
-      if (questionCount % 2 === 0) level++; // hər 2 sualdan sonra səviyyə artır
       setTimeout(generateQuestion, 1500);
     }
 
