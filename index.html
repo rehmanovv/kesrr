@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kesr Testləri</title>
+  <style>
+    body {
+      background-color: #121820;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 { color: #00e676; }
+    .question-box {
+      background: #1e272e;
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    input[type="number"] {
+      width: 80px;
+      padding: 8px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      background: #00e676;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Kesr Testləri</h1>
+  <div class="question-box" id="questionBox">
+    <p id="questionText">Hazırlanır...</p>
+    <input type="number" id="answerNum" placeholder="Sədədi yaz">
+    <input type="number" id="answerDen" placeholder="Məxrəci yaz">
+    <br>
+    <button onclick="checkAnswer()">Cavabla</button>
+    <div class="result" id="resultText"></div>
+  </div>
+
+  <script>
+    let usedQuestions = new Set();
+    let correctAnswer = { num: 0, den: 0 };
+    let questionCount = 0;
+    let level = 1;
+
+    function gcd(a, b) {
+      return b === 0 ? a : gcd(b, a % b);
+    }
+
+    function generateFraction(level) {
+      const max = 5 + level * 3;
+      let a = Math.floor(Math.random() * max) + 1;
+      let b = Math.floor(Math.random() * max) + 1;
+      const div = gcd(a, b);
+      return { num: a, den: b, simpNum: a / div, simpDen: b / div };
+    }
+
+    function generateQuestion() {
+      let f1 = generateFraction(level);
+      let f2 = generateFraction(level);
+      let type = ["topla", "çıx", "vurma", "bölmə"][Math.floor(Math.random() * 4)];
+
+      // Unikal sual üçün açar
+      let key = `${f1.num}/${f1.den}-${type}-${f2.num}/${f2.den}`;
+      if (usedQuestions.has(key)) return generateQuestion();
+      usedQuestions.add(key);
+
+      let resultNum, resultDen, question;
+
+      switch (type) {
+        case "topla":
+          resultNum = f1.num * f2.den + f2.num * f1.den;
+          resultDen = f1.den * f2.den;
+          question = `${f1.num}/${f1.den} + ${f2.num}/${f2.den}`;
+          break;
+        case "çıx":
+          resultNum = f1.num * f2.den - f2.num * f1.den;
+          resultDen = f1.den * f2.den;
+          question = `${f1.num}/${f1.den} - ${f2.num}/${f2.den}`;
+          break;
+        case "vurma":
+          resultNum = f1.num * f2.num;
+          resultDen = f1.den * f2.den;
+          question = `${f1.num}/${f1.den} × ${f2.num}/${f2.den}`;
+          break;
+        case "bölmə":
+          resultNum = f1.num * f2.den;
+          resultDen = f1.den * f2.num;
+          question = `${f1.num}/${f1.den} ÷ ${f2.num}/${f2.den}`;
+          break;
+      }
+
+      const div = gcd(resultNum, resultDen);
+      correctAnswer = { num: resultNum / div, den: resultDen / div };
+
+      document.getElementById("questionText").innerText = `Sual ${questionCount + 1}: ${question} = ?`;
+      document.getElementById("resultText").innerText = "";
+      document.getElementById("answerNum").value = "";
+      document.getElementById("answerDen").value = "";
+    }
+
+    function checkAnswer() {
+      const userNum = parseInt(document.getElementById("answerNum").value);
+      const userDen = parseInt(document.getElementById("answerDen").value);
+      if (isNaN(userNum) || isNaN(userDen)) {
+        alert("Zəhmət olmasa sədəd və məxrəc daxil et!");
+        return;
+      }
+
+      const div = gcd(userNum, userDen);
+      const simpNum = userNum / div;
+      const simpDen = userDen / div;
+
+      if (simpNum === correctAnswer.num && simpDen === correctAnswer.den) {
+        document.getElementById("resultText").innerHTML = "✅ Doğrudur!";
+      } else {
+        document.getElementById("resultText").innerHTML = `❌ Səhv! Düzgün cavab: ${correctAnswer.num}/${correctAnswer.den}`;
+      }
+
+      questionCount++;
+      if (questionCount % 2 === 0) level++; // hər 2 sualdan sonra səviyyə artır
+      setTimeout(generateQuestion, 1500);
+    }
+
+    generateQuestion();
+  </script>
+
+</body>
+</html>
